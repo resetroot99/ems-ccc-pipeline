@@ -5,6 +5,8 @@ A comprehensive data pipeline that automatically extracts, processes, and stores
 ## 🚀 Features
 
 - **Real-time File Monitoring**: Automatically processes new EMS files as they're exported from CCC ONE
+- **Multi-Location Support**: Track estimates by shop, location, and computer for enterprise deployments
+- **Geographic Data Tracking**: Tag estimates with shop location, region, and contact information
 - **Historical Data Processing**: Batch process existing EMS files
 - **Image Processing**: Upload and OCR process associated damage photos
 - **Structured Data Storage**: Store estimates in normalized Supabase database
@@ -77,6 +79,56 @@ In your CCC ONE portal:
    - ✅ Part Provider XML
 3. Set export destination to: `C:\CCC_EMS_EXPORTS\`
 4. Enable auto-export on estimate completion
+
+## 🏢 Multi-Location Deployment
+
+### Location Configuration
+
+During installation, you'll be prompted to configure location information:
+
+```bash
+npm run setup-location
+```
+
+This creates a `.env` file with your shop details:
+
+```env
+SHOP_NAME="Downtown Auto Body"
+SHOP_ID="SHOP001"
+SHOP_ADDRESS="123 Main St, City, State"
+SHOP_REGION="Northeast"
+SHOP_PHONE="555-0123"
+SHOP_EMAIL="info@downtownautobody.com"
+SHOP_TIMEZONE="America/New_York"
+```
+
+### Multi-Shop Deployment
+
+Deploy on multiple computers:
+
+1. **Install on each computer** with CCC ONE
+2. **Configure unique shop details** for each location
+3. **All data flows** to your central Supabase database
+4. **Analytics by location** - filter estimates by shop, region, or computer
+
+### Location Data Structure
+
+Each estimate includes location metadata:
+
+```json
+{
+  "shop_name": "Downtown Auto Body",
+  "shop_id": "SHOP001", 
+  "shop_address": "123 Main St, City, State",
+  "shop_region": "Northeast",
+  "computer_name": "WORKSTATION-1",
+  "timezone": "America/New_York",
+  "shop_contact": {
+    "phone": "555-0123",
+    "email": "info@downtownautobody.com"
+  }
+}
+```
 
 ## 🚦 Running the Pipeline
 

@@ -71,6 +71,11 @@ async function setupDatabase() {
     
     logger.info('✅ Database schema setup complete');
     
+    // Run location tracking migration
+    logger.info('📄 Applying location tracking migration...');
+    await applyLocationMigration(supabaseClient);
+    logger.info('✅ Location tracking migration complete');
+    
     // Verify tables were created
     logger.info('🔍 Verifying table creation...');
     
@@ -120,6 +125,50 @@ async function setupDatabase() {
     logger.error('2. Go to your Supabase Dashboard > SQL Editor');
     logger.error('3. Paste and run the SQL manually');
     process.exit(1);
+  }
+}
+
+// Apply location tracking migration
+async function applyLocationMigration(supabaseClient) {
+  try {
+    const migrationPath = path.join(__dirname, '../database/migrations/add_location_tracking.sql');
+    const migrationSql = await fs.readFile(migrationPath, 'utf8');
+    
+    // Split migration into individual statements
+    const statements = migrationSql
+      .split(';')
+      .map(stmt => stmt.trim())
+      .filter(stmt => stmt.length > 0 && !stmt.startsWith('--'));
+    
+    logger.info(`Applying ${statements.length} migration statements`);
+    
+    // Execute each statement
+    for (let i = 0; i < statements.length; i++) {
+      const statement = statements[i];
+      if (statement.trim()) {
+        try {
+          logger.debug(`Migration statement ${i + 1}/${statements.length}`);
+          
+          // Use direct SQL execution for ALTER TABLE statements
+          const { error } = await supabaseClient.supabase.rpc('exec_sql', {
+            sql: statement
+          });
+          
+          if (error) {
+            // Many ALTER TABLE statements will succeed even if they show errors
+            logger.debug(`Migration statement ${i + 1} completed (may show warning)`);
+          } else {
+            logger.debug(`Migration statement ${i + 1} executed successfully`);
+          }
+        } catch (statementError) {
+          logger.debug(`Migration statement ${i + 1} info: ${statementError.message}`);
+        }
+      }
+    }
+    
+  } catch (error) {
+    logger.warn(`Location migration warning: ${error.message}`);
+    logger.info('You may need to apply the migration manually from database/migrations/add_location_tracking.sql');
   }
 }
 

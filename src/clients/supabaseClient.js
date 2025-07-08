@@ -95,7 +95,15 @@ class SupabaseClient {
       vehicle_data: estimateData.vehicleData || {},
       damage_assessment: estimateData.damageAssessment || {},
       source_file: estimateData.sourceFile,
-      file_hash: estimateData.fileHash
+      file_hash: estimateData.fileHash,
+      // Location tracking fields
+      shop_name: config.location.shopName,
+      shop_id: config.location.shopId,
+      shop_address: config.location.address,
+      shop_region: config.location.region,
+      computer_name: config.location.computerName,
+      timezone: config.location.timezone,
+      shop_contact: config.location.contact
     };
 
     const { data, error } = await this.supabase
@@ -311,7 +319,11 @@ class SupabaseClient {
       records_processed: details.recordsProcessed || 0,
       errors_count: details.errorsCount || 0,
       error_details: details.errors || null,
-      processing_time_ms: details.processingTime || 0
+      processing_time_ms: details.processingTime || 0,
+      // Location tracking fields
+      shop_name: config.location.shopName,
+      shop_id: config.location.shopId,
+      computer_name: config.location.computerName
     };
 
     const { data, error } = await this.supabase

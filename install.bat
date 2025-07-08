@@ -7,9 +7,45 @@ echo.
 REM Check if Node.js is installed
 node --version >nul 2>&1
 if %errorlevel% neq 0 (
-    echo ERROR: Node.js is not installed!
-    echo Please install Node.js from https://nodejs.org/
-    echo Then run this installer again.
+    echo Node.js not found. Installing Node.js automatically...
+    echo.
+    
+    REM Try winget first (Windows 10/11)
+    winget --version >nul 2>&1
+    if %errorlevel% equ 0 (
+        echo Installing Node.js via winget...
+        winget install OpenJS.NodeJS --silent --accept-package-agreements --accept-source-agreements
+        if %errorlevel% equ 0 (
+            echo ✅ Node.js installed successfully via winget!
+            echo Please restart this installer to continue.
+            pause
+            exit /b 0
+        )
+    )
+    
+    REM Fallback: Try chocolatey
+    choco --version >nul 2>&1
+    if %errorlevel% equ 0 (
+        echo Installing Node.js via chocolatey...
+        choco install nodejs -y
+        if %errorlevel% equ 0 (
+            echo ✅ Node.js installed successfully via chocolatey!
+            echo Please restart this installer to continue.
+            pause
+            exit /b 0
+        )
+    )
+    
+    REM Final fallback: Manual download
+    echo.
+    echo ⚠️  Automatic installation failed.
+    echo Please manually install Node.js:
+    echo 1. Visit: https://nodejs.org/
+    echo 2. Download and install the LTS version
+    echo 3. Restart this installer
+    echo.
+    echo Opening Node.js download page...
+    start https://nodejs.org/
     pause
     exit /b 1
 )
@@ -33,6 +69,10 @@ echo ✅ Dependencies installed successfully!
 echo.
 echo Setting up database...
 npm run setup
+
+echo.
+echo Setting up location configuration...
+npm run setup-location
 
 echo.
 echo Creating required directories...

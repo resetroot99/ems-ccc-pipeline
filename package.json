@@ -9,6 +9,7 @@
     "historical": "node src/index.js historical",
     "status": "node src/index.js status",
     "setup": "node scripts/setup-database.js",
+    "setup-location": "node scripts/setup-location.js",
     "start-service": "node src/index.js start",
     "stop-service": "echo Use stop-service.bat on Windows",
     "install-windows": "echo Use install.bat on Windows",
