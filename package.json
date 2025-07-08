@@ -9,9 +9,9 @@
     "historical": "node src/index.js historical",
     "status": "node src/index.js status",
     "setup": "node scripts/setup-database.js",
-    "start-service": "start-service.bat",
-    "stop-service": "stop-service.bat",
-    "install-windows": "install.bat",
+    "start-service": "node src/index.js start",
+    "stop-service": "echo Use stop-service.bat on Windows",
+    "install-windows": "echo Use install.bat on Windows",
     "test": "jest"
   },
   "keywords": ["ems", "ccc", "automotive", "estimates", "supabase"],

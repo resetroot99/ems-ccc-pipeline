@@ -35,6 +35,18 @@ echo Setting up database...
 npm run setup
 
 echo.
+echo Creating required directories...
+if not exist "C:\CCC_EMS_EXPORTS" (
+    mkdir "C:\CCC_EMS_EXPORTS"
+    echo ✅ Created: C:\CCC_EMS_EXPORTS
+) else (
+    echo ✅ Directory exists: C:\CCC_EMS_EXPORTS
+)
+
+if not exist "processed" mkdir processed
+if not exist "logs" mkdir logs
+
+echo.
 echo ===============================================
 echo           Installation Complete!
 echo ===============================================
